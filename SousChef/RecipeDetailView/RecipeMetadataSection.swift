@@ -1,9 +1,16 @@
 // This file modularizes the RecipeMetadataSection view from RecipeDetailView.swift.
 import SwiftUI
 
-struct RecipeMetadataSection: View {
+struct RecipeMetadataSection<Trailing: View>: View {
     let recipe: Recipe
     let createdAtFormatted: String
+//    @ViewBuilder let trailing: () -> Trailing
+    
+    init(recipe: Recipe, createdAtFormatted: String, @ViewBuilder trailing: @escaping () -> Trailing = { EmptyView() }) {
+        self.recipe = recipe
+        self.createdAtFormatted = createdAtFormatted
+//        self.trailing = trailing
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -19,6 +26,29 @@ struct RecipeMetadataSection: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                Spacer()
+                Button(action: {
+                    // TODO: Handle cook now action
+                }) {
+                    Text("Cook Now")
+                        .font(.headline)
+                        .frame(
+                            minWidth: 120,
+                            maxWidth: 200,
+                            minHeight: 44,
+                            maxHeight: 100
+                        )
+                        .foregroundColor(.white)
+                        
+                        .buttonStyle(.plain)
+                }
+                .frame(maxHeight: 100, alignment: .center)
+                .padding(.vertical, 6)
+                .padding(.trailing, 2)
+                .glassEffect(.regular.tint(Color(red: 0.0, green: 0.4, blue: 0.0)).interactive())
+            
+                .controlSize(.large)
+
             }
             Divider()
             HStack(spacing: 12) {
@@ -42,3 +72,4 @@ struct RecipeMetadataSection: View {
         )
     }
 }
+
