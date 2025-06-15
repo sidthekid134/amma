@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "8A198BC8-BF63-441B-AB63-ED36464B437F",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:SousChef.xcodeproj",
+      "identifier" : "BC1DE77B2DFB8470004E4097",
+      "name" : "SousChef"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:SousChef.xcodeproj",
+        "identifier" : "BC1DE78A2DFB8472004E4097",
+        "name" : "SousChefTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:SousChef.xcodeproj",
+        "identifier" : "BC1DE7942DFB8472004E4097",
+        "name" : "SousChefUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

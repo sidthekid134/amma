@@ -5,28 +5,27 @@
 //  Created by Sid Moparthi on 6/12/25.
 //
 
-import SwiftUI
 import SwiftData
+import Foundation
+import SwiftUI
 
 @main
 struct SousChefApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
+    let dataContainer: ModelContainer = {
+        try! ModelContainer(
+            for: SavedImageRecord.self,
+            configurations: ModelConfiguration()
+        )
     }()
+    
+
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().modelContainer(dataContainer).task {
+                await RecipeImageProvider.shared.configure(with: dataContainer.mainContext)
+            }
         }
-        .modelContainer(sharedModelContainer)
+        
     }
 }
