@@ -9,20 +9,25 @@ import SwiftData
 import Foundation
 import SwiftUI
 
+// Shared for both app and preview context
+extension ModelContainer {
+    static func appContainer(inMemory: Bool = false) -> ModelContainer {
+        let config = ModelConfiguration(isStoredInMemoryOnly: inMemory)
+        return try! ModelContainer(
+            for: SavedImageRecord.self, Recipe.self,
+            configurations: config
+        )
+    }
+}
+
 @main
 struct SousChefApp: App {
-    let dataContainer: ModelContainer = {
-        try! ModelContainer(
-            for: SavedImageRecord.self,
-            configurations: ModelConfiguration()
-        )
-    }()
-    
-
+    let dataContainer: ModelContainer = ModelContainer.appContainer()
 
     var body: some Scene {
         WindowGroup {
-            ContentView().modelContainer(dataContainer).task {
+            ContentView()
+                .modelContainer(dataContainer).task {
                 await RecipeImageProvider.shared.configure(with: dataContainer.mainContext)
             }
         }

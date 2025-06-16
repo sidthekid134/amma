@@ -4,8 +4,14 @@ import SwiftData
 
 
 struct RecipeDetailView: View {
+    
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @State private var showDeleteAlert = false
+    @Binding var selectedRecipe: Recipe?
 
     let recipe: Recipe
+    var onDelete: () -> Void = {}
     let columns = [
         GridItem(.adaptive(minimum: 120), spacing: 16)
     ]
@@ -57,6 +63,27 @@ struct RecipeDetailView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .destructiveAction) {
+                Button(action: { showDeleteAlert = true }) {
+                    Image(systemName: "trash")
+                        
+                }
+                .buttonStyle(.glass)
+                .accessibilityLabel("Delete Recipe")
+            }
+        }
+        .alert("Delete Recipe", isPresented: $showDeleteAlert) {
+            Button("Delete", role: .destructive) {
+                modelContext.delete(recipe)
+                try? modelContext.save()
+                selectedRecipe = nil
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to delete this recipe? This action cannot be undone.")
+        }
     }
     
     private var createdAtFormatted: String {
@@ -68,67 +95,67 @@ struct RecipeDetailView: View {
 }
 
 
-struct RecipeDetailView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        let mockRecipe = Recipe(
-            id: "preview-1",
-            title: "Spaghetti Bolognese",
-            servings: "4",
-            totalTimeMinutes: 90,
-            activeTimeMinutes: 30,
-            passiveTimeMinutes: 60,
-            metadata: RecipeMetadata(
-                cuisine: "Italian",
-                dishType: "Pasta",
-                difficultyLevel: "Medium"
-            ),
-            ingredients: [
-                RecipeIngredient(name: "Spaghetti", quantity: "400g", type: "Pasta"),
-                RecipeIngredient(name: "Olive Oil", quantity: "2 tbsp", type: "Oil"),
-                RecipeIngredient(name: "Onion", quantity: "1, chopped", type: "Vegetable"),
-                RecipeIngredient(name: "Garlic Cloves", quantity: "2, minced", type: "Vegetable"),
-                RecipeIngredient(name: "Ground Beef", quantity: "400g", type: "Meat"),
-                RecipeIngredient(name: "Canned Tomatoes", quantity: "800g", type: "Vegetable"),
-                RecipeIngredient(name: "Salt and Pepper", quantity: "to taste", type: "Spice")
-            ],
-            steps: [
-                RecipeStep(
-                    stepNumber: 1,
-                    title: "Cook pasta",
-                    equipmentNeeded: ["Large pot"],
-                    instructions: "Cook spaghetti according to package instructions.",
-                    ingredientsUsed: [RecipeIngredient(name: "Spaghetti", quantity: "400g", type: "Pasta")],
-                    estimatedTimeMinutes: 10,
-                    definitionOfDone: "Pasta is cooked."
-                ),
-                RecipeStep(
-                    stepNumber: 2,
-                    title: "Sauté vegetables",
-                    equipmentNeeded: ["Frying pan"],
-                    instructions: "Heat olive oil in a pan and sauté onion and garlic until translucent.",
-                    ingredientsUsed: [
-                        RecipeIngredient(name: "Olive Oil", quantity: "2 tbsp", type: "Oil"),
-                        RecipeIngredient(name: "Onion", quantity: "1, chopped", type: "Vegetable"),
-                        RecipeIngredient(name: "Garlic Cloves", quantity: "2, minced", type: "Vegetable")
-                    ],
-                    estimatedTimeMinutes: 10,
-                    definitionOfDone: "Vegetables are soft."
-                )
-            ],
-            allEquipmentNeeded: [
-                "Large pot",
-                "Frying pan",
-                "Wooden spoon",
-                "Colander"
-            ],
-            createdAt: Date()
-        )
-        NavigationView {
-            RecipeDetailView(recipe: mockRecipe)
-        }
-    }
-}
+//struct RecipeDetailView_Previews: PreviewProvider {
+//    
+//    static var previews: some View {
+//        let mockRecipe = Recipe(
+//            id: "preview-1",
+//            title: "Spaghetti Bolognese",
+//            servings: "4",
+//            totalTimeMinutes: 90,
+//            activeTimeMinutes: 30,
+//            passiveTimeMinutes: 60,
+//            metadata: RecipeMetadata(
+//                cuisine: "Italian",
+//                dishType: "Pasta",
+//                difficultyLevel: "Medium"
+//            ),
+//            ingredients: [
+//                RecipeIngredient(name: "Spaghetti", quantity: "400g", type: "Pasta"),
+//                RecipeIngredient(name: "Olive Oil", quantity: "2 tbsp", type: "Oil"),
+//                RecipeIngredient(name: "Onion", quantity: "1, chopped", type: "Vegetable"),
+//                RecipeIngredient(name: "Garlic Cloves", quantity: "2, minced", type: "Vegetable"),
+//                RecipeIngredient(name: "Ground Beef", quantity: "400g", type: "Meat"),
+//                RecipeIngredient(name: "Canned Tomatoes", quantity: "800g", type: "Vegetable"),
+//                RecipeIngredient(name: "Salt and Pepper", quantity: "to taste", type: "Spice")
+//            ],
+//            steps: [
+//                RecipeStep(
+//                    stepNumber: 1,
+//                    title: "Cook pasta",
+//                    equipmentNeeded: ["Large pot"],
+//                    instructions: "Cook spaghetti according to package instructions.",
+//                    ingredientsUsed: [RecipeIngredient(name: "Spaghetti", quantity: "400g", type: "Pasta")],
+//                    estimatedTimeMinutes: 10,
+//                    definitionOfDone: "Pasta is cooked."
+//                ),
+//                RecipeStep(
+//                    stepNumber: 2,
+//                    title: "Sauté vegetables",
+//                    equipmentNeeded: ["Frying pan"],
+//                    instructions: "Heat olive oil in a pan and sauté onion and garlic until translucent.",
+//                    ingredientsUsed: [
+//                        RecipeIngredient(name: "Olive Oil", quantity: "2 tbsp", type: "Oil"),
+//                        RecipeIngredient(name: "Onion", quantity: "1, chopped", type: "Vegetable"),
+//                        RecipeIngredient(name: "Garlic Cloves", quantity: "2, minced", type: "Vegetable")
+//                    ],
+//                    estimatedTimeMinutes: 10,
+//                    definitionOfDone: "Vegetables are soft."
+//                )
+//            ],
+//            allEquipmentNeeded: [
+//                "Large pot",
+//                "Frying pan",
+//                "Wooden spoon",
+//                "Colander"
+//            ],
+//            createdAt: Date()
+//        )
+//        NavigationView {
+//            RecipeDetailView(selectedRecipe: mockRecipe?, recipe: mockRecipe)
+//        }
+//    }
+//}
 
 
 #if DEBUG

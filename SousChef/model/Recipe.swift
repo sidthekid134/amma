@@ -2,20 +2,20 @@ import Foundation
 import SwiftData
 
 @Model
-final class Recipe: Identifiable {
-    var id: String
-    var title: String
-    var servings: String
-    var totalTimeMinutes: Int
-    var activeTimeMinutes: Int
-    var passiveTimeMinutes: Int
-    var metadata: RecipeMetadata
-    var ingredients: [RecipeIngredient]
-    var steps: [RecipeStep]
-    var allEquipmentNeeded: [String]
-    var createdAt: Date
+public final class Recipe: Identifiable {
+    public var id: String
+    public var title: String
+    public var servings: String
+    public var totalTimeMinutes: Int
+    public var activeTimeMinutes: Int
+    public var passiveTimeMinutes: Int
+    public var metadata: RecipeMetadata
+    public var ingredients: [RecipeIngredient]
+    public var steps: [RecipeStep]
+    public var allEquipmentNeeded: [String]
+    public var createdAt: Date
     
-    init(id: String, title: String, servings: String, totalTimeMinutes: Int, activeTimeMinutes: Int, passiveTimeMinutes: Int, metadata: RecipeMetadata, ingredients: [RecipeIngredient], steps: [RecipeStep], allEquipmentNeeded: [String], createdAt: Date = Date()) {
+    public init(id: String, title: String, servings: String, totalTimeMinutes: Int, activeTimeMinutes: Int, passiveTimeMinutes: Int, metadata: RecipeMetadata, ingredients: [RecipeIngredient], steps: [RecipeStep], allEquipmentNeeded: [String], createdAt: Date = Date()) {
         self.id = id
         self.title = title
         self.servings = servings
@@ -31,12 +31,12 @@ final class Recipe: Identifiable {
 }
 
 @Model
-final class RecipeMetadata {
-    var cuisine: String
-    var dishType: String
-    var difficultyLevel: String
+public final class RecipeMetadata {
+    public var cuisine: String
+    public var dishType: String
+    public var difficultyLevel: String
     
-    init(cuisine: String, dishType: String, difficultyLevel: String) {
+    public init(cuisine: String, dishType: String, difficultyLevel: String) {
         self.cuisine = cuisine
         self.dishType = dishType
         self.difficultyLevel = difficultyLevel
@@ -44,12 +44,12 @@ final class RecipeMetadata {
 }
 
 @Model
-final class RecipeIngredient {
-    var name: String
-    var quantity: String
-    var type: String
+public final class RecipeIngredient {
+    public var name: String
+    public var quantity: String
+    public var type: String
     
-    init(name: String, quantity: String, type: String) {
+    public init(name: String, quantity: String, type: String) {
         self.name = name
         self.quantity = quantity
         self.type = type
@@ -57,16 +57,16 @@ final class RecipeIngredient {
 }
 
 @Model
-final class RecipeStep {
-    var stepNumber: Int
-    var title: String
-    var equipmentNeeded: [String]
-    var instructions: String
-    var ingredientsUsed: [RecipeIngredient]
-    var estimatedTimeMinutes: Int
-    var definitionOfDone: String
+public final class RecipeStep {
+    public var stepNumber: Int
+    public var title: String
+    public var equipmentNeeded: [String]
+    public var instructions: String
+    public var ingredientsUsed: [RecipeIngredient]
+    public var estimatedTimeMinutes: Int
+    public var definitionOfDone: String
     
-    init(stepNumber: Int, title: String, equipmentNeeded: [String], instructions: String, ingredientsUsed: [RecipeIngredient], estimatedTimeMinutes: Int, definitionOfDone: String) {
+    public init(stepNumber: Int, title: String, equipmentNeeded: [String], instructions: String, ingredientsUsed: [RecipeIngredient], estimatedTimeMinutes: Int, definitionOfDone: String) {
         self.stepNumber = stepNumber
         self.title = title
         self.equipmentNeeded = equipmentNeeded

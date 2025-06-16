@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import os
 
 struct ContentView: View {
     
@@ -15,21 +16,26 @@ struct ContentView: View {
         case favorites
     }
     
-    @State private var recipes: [Recipe] = Recipe.mockRecipes
+    @Environment(\.modelContext) private var modelContext
+    @Query private var recipes: [Recipe]
+    
     @State private var selectedFilter: RecipeFilter = .all
     @State private var showingAddRecipe = false
     @State private var selectedRecipe: Recipe?
     @State private var sortAscending = true
     @State private var splitViewVisibility: NavigationSplitViewVisibility = .doubleColumn
+    @State private var didLoadMockData = false
     
     var filteredRecipes: [Recipe] {
+        print("recipes - \(recipes.count)")
+        let recipeSource = recipes
         let filtered: [Recipe]
         switch selectedFilter {
         case .all:
-            filtered = recipes
+            filtered = recipeSource
         case .favorites:
             // Uncomment the following line if 'isFavorite' exists on Recipe:
-            // filtered = recipes.filter { $0.isFavorite }
+            // filtered = recipeSource.filter { $0.isFavorite }
             filtered = []
         }
         return filtered.sorted { sortAscending ? $0.title < $1.title : $0.title > $1.title }
@@ -63,7 +69,7 @@ struct ContentView: View {
                     .buttonStyle(.plain)
                 }
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItemGroup {
                         Menu {
                             Button(action: { selectedFilter = .all }) {
                                 Label("All Recipes", systemImage: "tray.and.arrow.down.fill")
@@ -74,8 +80,6 @@ struct ContentView: View {
                         } label: {
                             Image(systemName: "line.3.horizontal.decrease.circle")
                         }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
                             Button(action: { sortAscending = true }) {
                                 Label("Title Ascending", systemImage: "arrow.up")
@@ -87,14 +91,65 @@ struct ContentView: View {
                             Image(systemName: "arrow.up.arrow.down.circle")
                         }
                     }
+                    ToolbarSpacer(.fixed)
+                    ToolbarItem {
+                        Button {
+                            showingAddRecipe = true
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                    }
                 }
             }
         } detail: {
             if let recipe = selectedRecipe {
-                RecipeDetailView(recipe: recipe)
+                RecipeDetailView(
+                    selectedRecipe: $selectedRecipe,
+                    recipe: recipe
+                )
             } else {
                 Text("Select a recipe to see details")
                     .foregroundColor(.secondary)
+            }
+        }
+        .sheet(isPresented: $showingAddRecipe) {
+            AddRecipeView()
+        }
+        .task {
+            if !didLoadMockData && recipes.isEmpty {
+                for mock in Recipe.mockRecipes {
+                    let newRecipe = Recipe(
+                        id: UUID().uuidString,
+                        title: mock.title,
+                        servings: mock.servings,
+                        totalTimeMinutes: mock.totalTimeMinutes,
+                        activeTimeMinutes: mock.activeTimeMinutes,
+                        passiveTimeMinutes: mock.passiveTimeMinutes,
+                        metadata: RecipeMetadata(
+                            cuisine: mock.metadata.cuisine,
+                            dishType: mock.metadata.dishType,
+                            difficultyLevel: mock.metadata.difficultyLevel
+                        ),
+                        ingredients: mock.ingredients.map { RecipeIngredient(name: $0.name, quantity: $0.quantity, type: $0.type) },
+                        steps: mock.steps.map { step in
+                            RecipeStep(
+                                stepNumber: step.stepNumber,
+                                title: step.title,
+                                equipmentNeeded: step.equipmentNeeded,
+                                instructions: step.instructions,
+                                ingredientsUsed: step.ingredientsUsed.map {
+                                    RecipeIngredient(name: $0.name, quantity: $0.quantity, type: $0.type)
+                                },
+                                estimatedTimeMinutes: step.estimatedTimeMinutes,
+                                definitionOfDone: step.definitionOfDone
+                            )
+                        },
+                        allEquipmentNeeded: mock.allEquipmentNeeded,
+                        createdAt: mock.createdAt
+                    )
+                    modelContext.insert(newRecipe)
+                }
+                didLoadMockData = true
             }
         }
     }
@@ -102,4 +157,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .modelContainer(ModelContainer.appContainer(inMemory: false))
 }
