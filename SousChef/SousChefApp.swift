@@ -23,14 +23,17 @@ extension ModelContainer {
 @main
 struct SousChefApp: App {
     let dataContainer: ModelContainer = ModelContainer.appContainer()
+    @ObservedObject private var themeManager = ThemeManager.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(dataContainer).task {
-                await RecipeImageProvider.shared.configure(with: dataContainer.mainContext)
-            }
+                .modelContainer(dataContainer)
+                .task {
+                    await RecipeImageProvider.shared.configure(with: dataContainer.mainContext)
+                }
+                .applyTheme()
+                .environment(\.themeManager, themeManager)
         }
-        
     }
 }

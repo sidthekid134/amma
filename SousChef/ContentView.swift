@@ -25,6 +25,8 @@ struct ContentView: View {
     @State private var sortAscending = true
     @State private var splitViewVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State private var didLoadMockData = false
+    @State private var showingThemeSettings = false
+    @Environment(\.themeManager) private var themeManager
     
     var filteredRecipes: [Recipe] {
         print("recipes - \(recipes.count)")
@@ -99,6 +101,14 @@ struct ContentView: View {
                             Image(systemName: "plus")
                         }
                     }
+                    
+                    ToolbarItem {
+                        Button {
+                            showingThemeSettings = true
+                        } label: {
+                            Image(systemName: themeManager.currentTheme == .dark ? "moon.fill" : "sun.max.fill")
+                        }
+                    }
                 }
             }
         } detail: {
@@ -114,6 +124,9 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingAddRecipe) {
             AddRecipeView()
+        }
+        .sheet(isPresented: $showingThemeSettings) {
+            ThemeSettingsView()
         }
         .task {
             if !didLoadMockData && recipes.isEmpty {
