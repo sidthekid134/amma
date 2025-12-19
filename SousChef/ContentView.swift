@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import os
+import Combine
 
 struct ContentView: View {
     
@@ -25,6 +26,9 @@ struct ContentView: View {
     @State private var sortAscending = true
     @State private var splitViewVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State private var didLoadMockData = false
+    @State private var showingSettings = false
+    @ObservedObject private var themeManager = ThemeManager.shared
+    @Environment(\.colorScheme) private var colorScheme
     
     var filteredRecipes: [Recipe] {
         print("recipes - \(recipes.count)")
@@ -44,10 +48,20 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $splitViewVisibility) {
             List() {
-                Label("All Recipes", systemImage: "tray.and.arrow.down.fill")
-                    .tag(RecipeFilter.all)
-                Label("Favorites", systemImage: "star.fill")
-                    .tag(RecipeFilter.favorites)
+                Section("Recipes") {
+                    Label("All Recipes", systemImage: "tray.and.arrow.down.fill")
+                        .tag(RecipeFilter.all)
+                    Label("Favorites", systemImage: "star.fill")
+                        .tag(RecipeFilter.favorites)
+                }
+                
+                Section("App") {
+                    Button(action: { showingSettings = true }) {
+                        Label("Settings", systemImage: "gear")
+                    }
+                    .accessibilityLabel("Settings")
+                    .accessibilityHint("Configure app appearance and other options")
+                }
             }
             .listStyle(SidebarListStyle())
         } content: {
@@ -114,6 +128,11 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingAddRecipe) {
             AddRecipeView()
+        }
+        .sheet(isPresented: $showingSettings) {
+            NavigationStack {
+                SettingsView()
+            }
         }
         .task {
             if !didLoadMockData && recipes.isEmpty {
