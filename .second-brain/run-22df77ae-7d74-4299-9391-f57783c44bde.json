@@ -1,0 +1,171 @@
+{
+  "run_id": "286342be-b770-463a-a7a7-998b4de4ec9e",
+  "project_id": "181fff37-dbc8-4bca-a578-faf714fa3a82",
+  "run_mode": "shadow",
+  "run_number": 1,
+  "status": "done",
+  "started_at": "2025-12-21T23:44:11.451525",
+  "ended_at": "2025-12-21T23:44:42.412350",
+  "duration_seconds": 30.960825,
+  "coordinator_branch": null,
+  "intent_branch": "intent/recipe-app-scaffold-286342be",
+  "pr_number": 9,
+  "pr_url": "https://github.com/sidthekid134/amma/pull/9",
+  "total_stories": 3,
+  "completed_stories": 3,
+  "failed_stories": 0,
+  "snapshot": {
+    "id": "22df77ae-7d74-4299-9391-f57783c44bde",
+    "name": "Recipe App Scaffold",
+    "description": "I want to create a scaffold for a recipe app. It should take in a recipe and save it and allow me to walk through step by step. ",
+    "dependencies": [],
+    "stories": [
+      {
+        "id": "4875e4e8-0984-458b-81f6-fcf6919aa56d",
+        "title": null,
+        "description": null,
+        "objective": "Implement Core Data model for recipe storage",
+        "acceptance_criteria": [
+          "Recipe entity created with properties for title, ingredients, and steps",
+          "Core Data stack initialized with persistent container",
+          "Ability to create and save new recipe objects",
+          "Data model supports multiple recipes",
+          "Implements basic CRUD operations for recipes"
+        ],
+        "implementation_notes": [],
+        "dependencies": [],
+        "workstream_id": "default",
+        "complexity_score": 0,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 0,
+        "preferences": {}
+      },
+      {
+        "id": "9a21690d-77fb-40f8-b515-9a3e56541d23",
+        "title": null,
+        "description": null,
+        "objective": "Create user interface for recipe creation",
+        "acceptance_criteria": [
+          "Form includes input fields for recipe title",
+          "Dynamic input for ingredients list",
+          "Step-by-step instruction input with add/remove functionality",
+          "Save button triggers recipe persistence",
+          "Input validation prevents empty submissions"
+        ],
+        "implementation_notes": [],
+        "dependencies": [
+          {
+            "type": "story",
+            "id": "4875e4e8-0984-458b-81f6-fcf6919aa56d"
+          }
+        ],
+        "workstream_id": "default",
+        "complexity_score": 0,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 1,
+        "preferences": {}
+      },
+      {
+        "id": "792f51f8-f37f-407a-8b86-387320769f40",
+        "title": null,
+        "description": null,
+        "objective": "Build step-by-step recipe navigation UI",
+        "acceptance_criteria": [
+          "Display current step of total recipe steps",
+          "Next and previous navigation buttons",
+          "Disable previous button on first step",
+          "Disable next button on last step",
+          "Smooth transition between recipe steps"
+        ],
+        "implementation_notes": [],
+        "dependencies": [
+          {
+            "type": "story",
+            "id": "9a21690d-77fb-40f8-b515-9a3e56541d23"
+          }
+        ],
+        "workstream_id": "default",
+        "complexity_score": 0,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 2,
+        "preferences": {}
+      }
+    ]
+  },
+  "story_executions": [
+    {
+      "story_id": "4875e4e8-0984-458b-81f6-fcf6919aa56d",
+      "title": null,
+      "description": null,
+      "objective": "Implement Core Data model for recipe storage",
+      "execution_id": "ca5141fb-c8be-4d52-9191-6bddd5847267",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "shadow-engineer-1",
+      "agent_name": "shadow-engineer-1",
+      "branch": "story/4875e4e8-0984-458b-81f6-fcf6919aa56d-286342be",
+      "commit_sha": null,
+      "pr_number": 6,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/6",
+      "started_at": "2025-12-21T23:44:12.047153",
+      "ended_at": "2025-12-21T23:44:21.270613",
+      "duration_seconds": 9.22346,
+      "messages_count": null,
+      "files_modified": null,
+      "lines_added": null,
+      "lines_removed": null,
+      "error_message": null
+    },
+    {
+      "story_id": "9a21690d-77fb-40f8-b515-9a3e56541d23",
+      "title": null,
+      "description": null,
+      "objective": "Create user interface for recipe creation",
+      "execution_id": "02ea2f78-f7a9-4f5e-a684-67c979857ee2",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "shadow-engineer-1",
+      "agent_name": "shadow-engineer-1",
+      "branch": "story/9a21690d-77fb-40f8-b515-9a3e56541d23-286342be",
+      "commit_sha": null,
+      "pr_number": 7,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/7",
+      "started_at": "2025-12-21T23:44:22.567639",
+      "ended_at": "2025-12-21T23:44:29.515193",
+      "duration_seconds": 6.947554,
+      "messages_count": null,
+      "files_modified": null,
+      "lines_added": null,
+      "lines_removed": null,
+      "error_message": null
+    },
+    {
+      "story_id": "792f51f8-f37f-407a-8b86-387320769f40",
+      "title": null,
+      "description": null,
+      "objective": "Build step-by-step recipe navigation UI",
+      "execution_id": "7fa162d9-e963-446e-9176-721a54e11fc7",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "shadow-engineer-1",
+      "agent_name": "shadow-engineer-1",
+      "branch": "story/792f51f8-f37f-407a-8b86-387320769f40-286342be",
+      "commit_sha": null,
+      "pr_number": 8,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/8",
+      "started_at": "2025-12-21T23:44:30.859838",
+      "ended_at": "2025-12-21T23:44:39.608119",
+      "duration_seconds": 8.748281,
+      "messages_count": null,
+      "files_modified": null,
+      "lines_added": null,
+      "lines_removed": null,
+      "error_message": null
+    }
+  ],
+  "created_at": "2025-12-21T23:44:11.432289",
+  "updated_at": "2025-12-21T23:44:42.412530"
+}
