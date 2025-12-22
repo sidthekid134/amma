@@ -1,0 +1,173 @@
+{
+  "run_id": "25718230-c5d4-41e1-83bb-c69d9fb1957c",
+  "project_id": "da20fd88-7f57-4662-8750-e7aedc2b9418",
+  "run_mode": "shadow",
+  "run_number": 1,
+  "status": "done",
+  "started_at": "2025-12-22T23:45:57.247900",
+  "ended_at": "2025-12-22T23:46:14.536062",
+  "duration_seconds": 17.288162,
+  "coordinator_branch": null,
+  "intent_branch": "intent/recipe-cooking-workflow-app-25718230",
+  "pr_number": 13,
+  "pr_url": "https://github.com/sidthekid134/amma/pull/13",
+  "total_stories": 3,
+  "completed_stories": 3,
+  "failed_stories": 0,
+  "snapshot": {
+    "id": "6ed24520-c61b-4a33-917c-8d796cf0bb62",
+    "name": "Recipe Cooking Workflow App",
+    "description": "You are a senior React Native engineer. Scaffold a production-ready React Native (Expo) app for a \u201cRecipe Runner\u201d app: users save recipes and then cook them in a guided, step-by-step walkthrough mode.\n\nGOALS\n- Fast, clean scaffold with best-practice architecture.\n- Focus on the core workflow: Recipe list \u2192 Recipe detail \u2192 Cook Mode (step runner) \u2192 Resume.\n- Keep it minimal but extensible (no premature complexity).\n\nTECH STACK\n- Expo + TypeScript\n- expo-router for navigation\n- Zustand (or Redux Toolkit if you strongly prefer) for app state\n- React Query (TanStack Query) for data fetching + caching\n- Storage: AsyncStorage for local persistence (later can swap to SQLite/WatermelonDB)\n- Form + validation: react-hook-form + zod\n- UI: react-native-paper OR tamagui OR nativewind (pick one and be consistent)\n- Tests: Jest + React Native Testing Library (just wiring + one sample test)\n\nFEATURES (MVP)\n1) Recipe Library\n- View list of recipes (local persisted)\n- Create recipe (basic fields + steps)\n- Edit recipe\n- Delete recipe\n2) Recipe Detail\n- Shows ingredients + steps summary\n- \u201cStart cooking\u201d button\n3) Cook Mode (the key)\n- Full-screen step runner\n- One step displayed at a time with:\n  - step title\n  - instruction text\n  - optional \u201ctimer minutes/seconds\u201d\n  - checklist items (optional)\n- Controls: Back, Next, Pause/Exit\n- Persists progress (currentStepIndex, timers paused state if present) so user can resume later\n- \u201cResume cooking\u201d from Recipe detail if an in-progress session exists\n4) Data Model (local)\n- Recipe: id, title, description?, servings?, tags?, createdAt, updatedAt\n- Ingredient: id, recipeId, name, quantity?, unit?, note?\n- Step: id, recipeId, order, title?, instruction, timerSeconds?, checklist? (array of strings)\n- CookSession: id, recipeId, startedAt, updatedAt, currentStepIndex, status (in_progress|completed|abandoned)\n\nAPP STRUCTURE REQUIREMENTS\n- Use feature-based folder structure:\n  - /app (routes)\n  - /features/recipes (screens/components/hooks)\n  - /features/cook (step runner, session logic)\n  - /lib (storage, ids, date utils)\n  - /store (zustand slices)\n  - /types (zod schemas + TS types)\n- Provide a small \u201crepository layer\u201d wrapping AsyncStorage so persistence is not scattered in components.\n- Use Zod schemas as the source of truth for types.\n\nDELIVERABLES\n- Output the complete project file tree.\n- Provide the key files\u2019 full contents (not just snippets):\n  - app/_layout.tsx, app/index.tsx\n  - app/recipes/index.tsx, app/recipes/[id].tsx\n  - app/recipes/new.tsx, app/recipes/[id]/edit.tsx\n  - app/cook/[recipeId].tsx\n  - features/cook/CookRunner.tsx\n  - store/useStore.ts (or slices)\n  - lib/storage.ts (AsyncStorage wrapper + migrations stub)\n  - types/schemas.ts (zod)\n- Include a minimal seed dataset and a \u201cReset demo data\u201d dev-only button.\n- Add one example unit test for the CookSession reducer/state transitions.\n- Include clear run instructions: install, start, test.\n\nCONSTRAINTS\n- Don\u2019t add auth, cloud sync, payments, or social.\n- No backend; local only.\n- Keep styling simple and consistent.\n- Avoid overengineering; the value is the cook-mode flow + clean persistence.\n",
+    "dependencies": [],
+    "stories": [
+      {
+        "id": "1e264439-c06b-4f46-8fb6-e19d3b17f3fa",
+        "title": null,
+        "description": null,
+        "objective": "Implement core data models and storage mechanism for recipes",
+        "acceptance_criteria": [
+          "Zod schemas defined for Recipe, Ingredient, Step, and CookSession",
+          "AsyncStorage wrapper provides CRUD operations for recipes",
+          "Data models support full recipe lifecycle management",
+          "Implements basic data migration strategy",
+          "Includes seed dataset for initial app population"
+        ],
+        "implementation_notes": [],
+        "dependencies": [],
+        "workstream_id": "default",
+        "complexity_score": 1,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 0,
+        "preferences": {}
+      },
+      {
+        "id": "0b312e82-2439-4fd7-89ac-b6d834c0636e",
+        "title": null,
+        "description": null,
+        "objective": "Build recipe management screens with full CRUD functionality",
+        "acceptance_criteria": [
+          "Recipe list screen displays all saved recipes",
+          "New recipe creation form with validation",
+          "Individual recipe detail view",
+          "Edit and delete recipe functionality",
+          "Persistent storage of recipe data",
+          "Responsive design across device sizes"
+        ],
+        "implementation_notes": [],
+        "dependencies": [
+          {
+            "type": "story",
+            "id": "1e264439-c06b-4f46-8fb6-e19d3b17f3fa"
+          }
+        ],
+        "workstream_id": "default",
+        "complexity_score": 1,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 1,
+        "preferences": {}
+      },
+      {
+        "id": "3fa20481-7707-4924-a021-b05d9dcdee17",
+        "title": null,
+        "description": null,
+        "objective": "Develop interactive cooking mode with comprehensive step navigation",
+        "acceptance_criteria": [
+          "Full-screen step-by-step recipe execution",
+          "Timer functionality for individual steps",
+          "Ability to pause and resume cooking session",
+          "Persist current cooking progress",
+          "Support for optional checklist items",
+          "Navigation between steps with back/next controls"
+        ],
+        "implementation_notes": [],
+        "dependencies": [
+          {
+            "type": "story",
+            "id": "0b312e82-2439-4fd7-89ac-b6d834c0636e"
+          }
+        ],
+        "workstream_id": "default",
+        "complexity_score": 1,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 2,
+        "preferences": {}
+      }
+    ]
+  },
+  "story_executions": [
+    {
+      "story_id": "1e264439-c06b-4f46-8fb6-e19d3b17f3fa",
+      "title": null,
+      "description": null,
+      "objective": "Implement core data models and storage mechanism for recipes",
+      "execution_id": "ba9d66c5-001b-40f5-a60e-655e21d1c9b4",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "shadow-engineer-1",
+      "agent_name": "shadow-engineer-1",
+      "branch": "story/1e264439-c06b-4f46-8fb6-e19d3b17f3fa-25718230",
+      "commit_sha": null,
+      "pr_number": 10,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/10",
+      "started_at": "2025-12-22T23:45:58.316602",
+      "ended_at": "2025-12-22T23:46:01.828438",
+      "duration_seconds": 3.511836,
+      "messages_count": null,
+      "files_modified": null,
+      "lines_added": null,
+      "lines_removed": null,
+      "error_message": null
+    },
+    {
+      "story_id": "0b312e82-2439-4fd7-89ac-b6d834c0636e",
+      "title": null,
+      "description": null,
+      "objective": "Build recipe management screens with full CRUD functionality",
+      "execution_id": "f412ec02-52e8-4b7a-8c68-8f80535cfcbf",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "shadow-engineer-1",
+      "agent_name": "shadow-engineer-1",
+      "branch": "story/0b312e82-2439-4fd7-89ac-b6d834c0636e-25718230",
+      "commit_sha": null,
+      "pr_number": 11,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/11",
+      "started_at": "2025-12-22T23:46:03.065318",
+      "ended_at": "2025-12-22T23:46:05.761764",
+      "duration_seconds": 2.696446,
+      "messages_count": null,
+      "files_modified": null,
+      "lines_added": null,
+      "lines_removed": null,
+      "error_message": null
+    },
+    {
+      "story_id": "3fa20481-7707-4924-a021-b05d9dcdee17",
+      "title": null,
+      "description": null,
+      "objective": "Develop interactive cooking mode with comprehensive step navigation",
+      "execution_id": "be381809-9ff0-4bb5-82dd-03780ccefdcb",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "shadow-engineer-1",
+      "agent_name": "shadow-engineer-1",
+      "branch": "story/3fa20481-7707-4924-a021-b05d9dcdee17-25718230",
+      "commit_sha": null,
+      "pr_number": 12,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/12",
+      "started_at": "2025-12-22T23:46:07.199979",
+      "ended_at": "2025-12-22T23:46:10.828270",
+      "duration_seconds": 3.628291,
+      "messages_count": null,
+      "files_modified": null,
+      "lines_added": null,
+      "lines_removed": null,
+      "error_message": null
+    }
+  ],
+  "created_at": "2025-12-22T23:45:57.236995",
+  "updated_at": "2025-12-22T23:46:14.536247"
+}
