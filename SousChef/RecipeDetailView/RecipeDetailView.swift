@@ -8,6 +8,7 @@ struct RecipeDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @State private var showDeleteAlert = false
+    @State private var showEditSheet = false
     @Binding var selectedRecipe: Recipe?
 
     let recipe: Recipe
@@ -64,6 +65,13 @@ struct RecipeDetailView: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: { showEditSheet = true }) {
+                    Image(systemName: "pencil")
+                }
+                .buttonStyle(.glass)
+                .accessibilityLabel("Edit Recipe")
+            }
             ToolbarItem(placement: .destructiveAction) {
                 Button(action: { showDeleteAlert = true }) {
                     Image(systemName: "trash")
@@ -72,6 +80,9 @@ struct RecipeDetailView: View {
                 .buttonStyle(.glass)
                 .accessibilityLabel("Delete Recipe")
             }
+        }
+        .sheet(isPresented: $showEditSheet) {
+            EditRecipeView(recipe: recipe)
         }
         .alert("Delete Recipe", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
