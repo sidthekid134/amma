@@ -1,0 +1,146 @@
+{
+  "run_id": "2a268a9d-7758-40c3-a48d-c5ec77a4ad6e",
+  "project_id": "d1aad2b0-66dc-4c8a-929f-eb638b08162b",
+  "run_mode": "merge",
+  "run_number": 1,
+  "status": "done",
+  "started_at": "2025-12-25T00:44:24.183451",
+  "ended_at": "2025-12-25T00:49:38.566881",
+  "duration_seconds": 314.38343,
+  "coordinator_branch": null,
+  "intent_branch": "intent/recipe-url-ingestion-and-processing-2a268a9d",
+  "pr_number": null,
+  "pr_url": null,
+  "total_stories": 2,
+  "completed_stories": 2,
+  "failed_stories": 0,
+  "snapshot": {
+    "id": "a26549e0-1da1-4238-b8c7-c490901574df",
+    "name": "Recipe URL Ingestion and Processing",
+    "description": "Implement a system to ingest recipe URLs and process their content. This feature should handle URL input from users, fetch and parse recipe data from external URLs, and integrate the extracted recipe information into the application's data model. The system should support recipe discovery and data extraction from web sources, enabling users to add recipes to the application by providing URLs rather than manual entry.",
+    "dependencies": [],
+    "stories": [
+      {
+        "id": "75e46849-c58b-4a15-a1b8-f63a8ef2bf21",
+        "title": "Implement Recipe URL Input and Validation",
+        "description": "Create a user interface component that accepts recipe URLs as input and validates them before processing. This includes a text input field, URL format validation, and error messaging for invalid URLs.",
+        "objective": "Build a URL input interface with validation that accepts recipe URLs and prepares them for content fetching.",
+        "acceptance_criteria": [
+          "User can input a recipe URL in a dedicated text field",
+          "System validates URL format and displays error message for invalid URLs",
+          "Valid URLs are accepted and passed to the content fetching system",
+          "UI provides clear feedback on validation status (success/error states)",
+          "Input field includes placeholder text and helper text explaining supported sources"
+        ],
+        "implementation_notes": [
+          "Create a new view/component for URL input with text field and submit button",
+          "Implement URL validation using regex or native URL parsing (e.g., URLComponents in iOS, URL class in Swift, or equivalent)",
+          "Add error state UI that displays validation messages below the input field",
+          "Include a list of supported recipe sources (AllRecipes, Food Network, etc.) as helper text",
+          "Connect submit button to trigger recipe fetching workflow",
+          "Store validated URL in a temporary state variable for passing to next processing step"
+        ],
+        "dependencies": [],
+        "workstream_id": "default",
+        "complexity_score": 5,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 0,
+        "preferences": {
+          "execution_overrides": {
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      },
+      {
+        "id": "1b8fa030-1731-4d45-a025-949810386fcf",
+        "title": "Build Recipe Content Fetcher with Fallback",
+        "description": "Implement a network service that fetches recipe content from URLs and includes a fallback mechanism allowing users to manually paste recipe content if URL fetching fails. Handle network errors gracefully with user-friendly error messages.",
+        "objective": "Create a fetching service that retrieves recipe content from URLs with manual paste fallback for network failures.",
+        "acceptance_criteria": [
+          "System successfully fetches HTML content from valid recipe URLs",
+          "Network errors are caught and display user-friendly error messages",
+          "User can manually paste recipe content when URL fetching fails",
+          "Fetched content is stored temporarily for parsing",
+          "System indicates loading state while fetching content",
+          "Timeout handling prevents indefinite waiting (max 10 seconds)"
+        ],
+        "implementation_notes": [
+          "Create a NetworkService class with a method to fetch URL content using URLSession (iOS) or equivalent HTTP client",
+          "Implement error handling for network failures, timeouts, and invalid responses",
+          "Add a timeout configuration (10 seconds) to prevent hanging requests",
+          "Create a fallback UI modal/sheet that appears on fetch failure with a text area for manual content paste",
+          "Implement retry logic with exponential backoff for transient failures",
+          "Store raw HTML content in a temporary variable for the parsing step",
+          "Add loading indicator/spinner during fetch operation"
+        ],
+        "dependencies": [
+          {
+            "type": "story",
+            "id": "75e46849-c58b-4a15-a1b8-f63a8ef2bf21"
+          }
+        ],
+        "workstream_id": "default",
+        "complexity_score": 5,
+        "estimated_tokens": 5000,
+        "status": "draft",
+        "order_index": 1,
+        "preferences": {
+          "execution_overrides": {
+            "model": "claude-haiku-4-5-20251001"
+          }
+        }
+      }
+    ]
+  },
+  "story_executions": [
+    {
+      "story_id": "75e46849-c58b-4a15-a1b8-f63a8ef2bf21",
+      "title": "Implement Recipe URL Input and Validation",
+      "description": "Create a user interface component that accepts recipe URLs as input and validates them before processing. This includes a text input field, URL format validation, and error messaging for invalid URLs.",
+      "objective": "Build a URL input interface with validation that accepts recipe URLs and prepares them for content fetching.",
+      "execution_id": "0e50e9ff-9a8d-4a09-931e-bbe638f3ae79",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "claude-engineer-1",
+      "agent_name": "Web Scraping Specialist",
+      "branch": "story/75e46849-c58b-4a15-a1b8-f63a8ef2bf21-2a268a9d",
+      "commit_sha": null,
+      "pr_number": 17,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/17",
+      "started_at": "2025-12-25T00:44:24.938970",
+      "ended_at": "2025-12-25T00:45:23.731910",
+      "duration_seconds": 58.79294,
+      "messages_count": null,
+      "files_modified": 1,
+      "lines_added": 0,
+      "lines_removed": 0,
+      "error_message": null
+    },
+    {
+      "story_id": "1b8fa030-1731-4d45-a025-949810386fcf",
+      "title": "Build Recipe Content Fetcher with Fallback",
+      "description": "Implement a network service that fetches recipe content from URLs and includes a fallback mechanism allowing users to manually paste recipe content if URL fetching fails. Handle network errors gracefully with user-friendly error messages.",
+      "objective": "Create a fetching service that retrieves recipe content from URLs with manual paste fallback for network failures.",
+      "execution_id": "2fa2cca9-19af-4a36-ba9b-9057f289f284",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "claude-engineer-1",
+      "agent_name": "Web Content Ingestion Specialist",
+      "branch": "story/1b8fa030-1731-4d45-a025-949810386fcf-2a268a9d",
+      "commit_sha": null,
+      "pr_number": 18,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/18",
+      "started_at": "2025-12-25T00:45:24.879651",
+      "ended_at": "2025-12-25T00:46:46.965376",
+      "duration_seconds": 82.085725,
+      "messages_count": null,
+      "files_modified": 1,
+      "lines_added": 0,
+      "lines_removed": 0,
+      "error_message": null
+    }
+  ],
+  "created_at": "2025-12-25T00:44:24.173268",
+  "updated_at": "2025-12-25T00:49:38.567297"
+}
