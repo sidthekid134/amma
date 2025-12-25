@@ -21,6 +21,8 @@ struct AddRecipeView: View {
     @State private var urlText: String = ""
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
+    @State private var urlValidationError: String? = nil
+    @State private var isURLValid: Bool = false
 
     private var modeColor: Color {
         switch selectedMode {
@@ -78,7 +80,7 @@ struct AddRecipeView: View {
                         Text("Paste recipe URL:")
                             .font(.headline)
                             .foregroundColor(modeColor)
-                        Text("Paste a recipe link from your favorite website.")
+                        Text("Paste a recipe link from your favorite website. Supports popular recipe sites like AllRecipes, Food Network, Delish, and more.")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .padding(.bottom, 2)
@@ -91,9 +93,31 @@ struct AddRecipeView: View {
                             .cornerRadius(8)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(modeColor.opacity(0.7))
+                                    .stroke(getURLBorderColor().opacity(0.7), lineWidth: 1.5)
                             )
                             .padding(.vertical, 4)
+                            .onChange(of: urlText) { oldValue, newValue in
+                                validateURL(newValue)
+                            }
+                        
+                        if !urlText.isEmpty {
+                            HStack(spacing: 6) {
+                                if isURLValid {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.green)
+                                    Text("Valid URL")
+                                        .font(.caption)
+                                        .foregroundColor(.green)
+                                } else if let error = urlValidationError {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.red)
+                                    Text(error)
+                                        .font(.caption)
+                                        .foregroundColor(.red)
+                                }
+                            }
+                            .padding(.top, 4)
+                        }
                     }
                     .padding(.horizontal)
                 case .comingSoon:
@@ -135,12 +159,13 @@ struct AddRecipeView: View {
                 Text("Submit")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(modeColor)
+                    .background(isSubmitButtonEnabled ? modeColor : .gray)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
             .padding(.bottom)
             .padding(.horizontal)
+            .disabled(!isSubmitButtonEnabled)
         }
         .padding()
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
@@ -209,9 +234,57 @@ struct AddRecipeView: View {
             }
             isLoading = false
         case .url:
-            print("Submitting recipe URL: \(urlText)")
+            isLoading = true
+            errorMessage = nil
+            
+            let (isValid, error) = URLValidator.isValidURL(urlText)
+            if !isValid {
+                errorMessage = error ?? "Invalid URL"
+                isLoading = false
+                return
+            }
+            
+            do {
+                print("Submitting recipe URL: \(urlText)")
+                if let url = URL(string: urlText) {
+                    print("URL parsed successfully: \(url)")
+                    await MainActor.run {
+                        urlText = ""
+                        urlValidationError = nil
+                        isURLValid = false
+                        dismiss()
+                    }
+                }
+            } catch {
+                errorMessage = "Failed to process URL: \(error.localizedDescription)"
+            }
+            isLoading = false
         case .comingSoon:
             print("Coming soon selected. No action.")
+        }
+    }
+    
+    private func validateURL(_ url: String) {
+        let (isValid, error) = URLValidator.isValidURL(url)
+        isURLValid = isValid
+        urlValidationError = error
+    }
+    
+    private func getURLBorderColor() -> Color {
+        if urlText.isEmpty {
+            return modeColor
+        }
+        return isURLValid ? .green : .red
+    }
+    
+    private var isSubmitButtonEnabled: Bool {
+        switch selectedMode {
+        case .manual:
+            return !manualText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isLoading
+        case .url:
+            return isURLValid && !isLoading
+        case .comingSoon:
+            return false
         }
     }
 }
