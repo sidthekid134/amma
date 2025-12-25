@@ -23,6 +23,8 @@ struct AddRecipeView: View {
     @State private var errorMessage: String? = nil
     @State private var urlValidationError: String? = nil
     @State private var isURLValid: Bool = false
+    @State private var fetchedContent: String? = nil
+    @State private var showManualPasteFallback: Bool = false
 
     private var modeColor: Color {
         switch selectedMode {
@@ -40,9 +42,6 @@ struct AddRecipeView: View {
                 .padding(.bottom, 2)
                 .accessibilityAddTraits(.isHeader)
             
-            // Removed shared description above the Picker
-            
-            // Picker section
             Picker("Add Recipe Method", selection: $selectedMode) {
                 ForEach(RecipeEntryMode.allCases) { mode in
                     Text(mode.rawValue).tag(mode)
@@ -51,6 +50,9 @@ struct AddRecipeView: View {
             .pickerStyle(.segmented)
             .tint(modeColor)
             .padding(.top)
+            .sheet(isPresented: $showManualPasteFallback) {
+                ManualPasteFallbackSheet(isPresented: $showManualPasteFallback, fetchedContent: $fetchedContent)
+            }
 
             Group {
                 switch selectedMode {
@@ -117,6 +119,26 @@ struct AddRecipeView: View {
                                 }
                             }
                             .padding(.top, 4)
+                        }
+                        
+                        if errorMessage != nil {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Having trouble? Try pasting the recipe content manually")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Button(action: {
+                                    showManualPasteFallback = true
+                                    errorMessage = nil
+                                }) {
+                                    Text("Paste Content Manually")
+                                        .font(.caption)
+                                        .foregroundColor(.green)
+                                }
+                            }
+                            .padding(8)
+                            .background(Color(.systemBackground).opacity(0.6))
+                            .cornerRadius(6)
+                            .padding(.top, 8)
                         }
                     }
                     .padding(.horizontal)
@@ -245,20 +267,26 @@ struct AddRecipeView: View {
             }
             
             do {
-                print("Submitting recipe URL: \(urlText)")
-                if let url = URL(string: urlText) {
-                    print("URL parsed successfully: \(url)")
-                    await MainActor.run {
-                        urlText = ""
-                        urlValidationError = nil
-                        isURLValid = false
-                        dismiss()
-                    }
+                print("Fetching recipe content from URL: \(urlText)")
+                let htmlContent = try await RecipeContentFetcher.fetchContent(from: urlText)
+                fetchedContent = htmlContent
+                print("Successfully fetched \(htmlContent.count) characters of content")
+                
+                await MainActor.run {
+                    urlText = ""
+                    urlValidationError = nil
+                    isURLValid = false
+                    dismiss()
                 }
+            } catch let fetchError as FetchError {
+                errorMessage = fetchError.errorDescription ?? "Failed to fetch recipe content"
+                print("Fetch error: \(errorMessage ?? "")")
+                isLoading = false
             } catch {
-                errorMessage = "Failed to process URL: \(error.localizedDescription)"
+                errorMessage = "Failed to fetch recipe content: \(error.localizedDescription)"
+                print("Unexpected error: \(error)")
+                isLoading = false
             }
-            isLoading = false
         case .comingSoon:
             print("Coming soon selected. No action.")
         }
@@ -289,6 +317,62 @@ struct AddRecipeView: View {
     }
 }
 
+struct ManualPasteFallbackSheet: View {
+    @Binding var isPresented: Bool
+    @Binding var fetchedContent: String?
+    @State private var pastedContent: String = ""
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Paste Recipe Content")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                
+                Text("You can manually paste the recipe content here. The system will extract and parse the recipe information.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                TextEditor(text: $pastedContent)
+                    .frame(minHeight: 150)
+                    .padding(8)
+                    .background(Color(.systemBackground).opacity(0.85))
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.blue.opacity(0.3))
+                    )
+                
+                Spacer()
+                
+                Button(action: {
+                    if !pastedContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        fetchedContent = pastedContent
+                        isPresented = false
+                    }
+                }) {
+                    Text("Use Content")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(!pastedContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.green : Color.gray)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .disabled(pastedContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            .padding()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                }
+            }
+        }
+    }
+}
 
 #if DEBUG
 #Preview {
