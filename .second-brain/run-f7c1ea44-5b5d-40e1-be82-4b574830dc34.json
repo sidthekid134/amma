@@ -1,0 +1,100 @@
+{
+  "run_id": "e8ce7bd4-8832-4447-ae06-fb08886d7632",
+  "project_id": "726cf117-39e8-4c35-a929-aa0b6e120be1",
+  "run_mode": "merge",
+  "run_number": 3,
+  "status": "done",
+  "started_at": "2025-12-19T09:42:09.083361",
+  "ended_at": "2025-12-19T09:44:46.789864",
+  "duration_seconds": 157.706503,
+  "coordinator_branch": null,
+  "intent_branch": "intent/dark-and-light-mode-toggle-e8ce7bd4",
+  "pr_number": 4,
+  "pr_url": "https://github.com/sidthekid134/amma/pull/4",
+  "total_stories": 2,
+  "completed_stories": 2,
+  "failed_stories": 0,
+  "snapshot": {
+    "id": "f7c1ea44-5b5d-40e1-be82-4b574830dc34",
+    "name": "Dark and Light Mode Toggle",
+    "description": "dark and light mode \n",
+    "dependencies": [],
+    "stories": [
+      {
+        "id": "092874cb-22e3-4fa9-a9f6-1d9a803a0401",
+        "objective": "Create app-wide theme management system with UserDefaults persistence",
+        "acceptance_criteria": [
+          "Support dark and light mode selection",
+          "Persist user's theme preference between app launches",
+          "Default to system appearance if no preference set",
+          "Theme can be changed programmatically and via UI",
+          "Theme changes apply immediately across entire app"
+        ],
+        "implementation_notes": [],
+        "dependencies": []
+      },
+      {
+        "id": "5eb07100-a9d3-4b85-8866-1537abf81970",
+        "objective": "Implement theme toggle UI in app settings view",
+        "acceptance_criteria": [
+          "Theme selection appears in app settings screen",
+          "Segmented control shows light/dark/system options",
+          "Immediate visual feedback when theme changes",
+          "Accessibility labels for theme selection controls",
+          "Theme selection persists after app restart"
+        ],
+        "implementation_notes": [],
+        "dependencies": [
+          {
+            "type": "story",
+            "id": "092874cb-22e3-4fa9-a9f6-1d9a803a0401"
+          }
+        ]
+      }
+    ]
+  },
+  "story_executions": [
+    {
+      "story_id": "092874cb-22e3-4fa9-a9f6-1d9a803a0401",
+      "execution_id": "745f8ade-593b-4bab-8324-3a12a47c454f",
+      "attempt_number": 1,
+      "status": "done",
+      "agent_id": "claude-engineer-1",
+      "agent_name": "Theme Management Specialist",
+      "branch": "story/092874cb-22e3-4fa9-a9f6-1d9a803a0401-e8ce7bd4",
+      "commit_sha": null,
+      "pr_number": 3,
+      "pr_url": "https://github.com/sidthekid134/amma/pull/3",
+      "started_at": "2025-12-19T09:42:09.775325",
+      "ended_at": "2025-12-19T09:44:41.402006",
+      "duration_seconds": 151.626681,
+      "messages_count": null,
+      "files_modified": 2,
+      "lines_added": 0,
+      "lines_removed": 0,
+      "error_message": null
+    },
+    {
+      "story_id": "5eb07100-a9d3-4b85-8866-1537abf81970",
+      "execution_id": "69615c23-6eeb-4c54-a9ca-3a3b8e51a2e5",
+      "attempt_number": 1,
+      "status": "in_progress",
+      "agent_id": "claude-engineer-2",
+      "agent_name": "UI/UX Specialist",
+      "branch": "intent/dark-and-light-mode-toggle-e8ce7bd4",
+      "commit_sha": null,
+      "pr_number": null,
+      "pr_url": null,
+      "started_at": "2025-12-19T09:44:42.909193",
+      "ended_at": null,
+      "duration_seconds": null,
+      "messages_count": null,
+      "files_modified": null,
+      "lines_added": null,
+      "lines_removed": null,
+      "error_message": null
+    }
+  ],
+  "created_at": "2025-12-19T09:42:09.071065",
+  "updated_at": "2025-12-19T09:44:46.790068"
+}

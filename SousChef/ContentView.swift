@@ -17,6 +17,7 @@ struct ContentView: View {
     }
     
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var themeManager: ThemeManager
     @Query private var recipes: [Recipe]
     
     @State private var selectedFilter: RecipeFilter = .all
@@ -25,6 +26,7 @@ struct ContentView: View {
     @State private var sortAscending = true
     @State private var splitViewVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State private var didLoadMockData = false
+    @State private var showingSettings = false
     
     var filteredRecipes: [Recipe] {
         print("recipes - \(recipes.count)")
@@ -90,6 +92,11 @@ struct ContentView: View {
                         } label: {
                             Image(systemName: "arrow.up.arrow.down.circle")
                         }
+                        Button {
+                            showingSettings = true
+                        } label: {
+                            Image(systemName: "gearshape.fill")
+                        }
                     }
                     ToolbarSpacer(.fixed)
                     ToolbarItem {
@@ -114,6 +121,9 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingAddRecipe) {
             AddRecipeView()
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
         }
         .task {
             if !didLoadMockData && recipes.isEmpty {
@@ -158,4 +168,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(ModelContainer.appContainer(inMemory: false))
+        .environmentObject(ThemeManager.shared)
 }

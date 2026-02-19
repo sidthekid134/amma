@@ -8,6 +8,7 @@
 import SwiftData
 import Foundation
 import SwiftUI
+import Combine
 
 // Shared for both app and preview context
 extension ModelContainer {
@@ -23,14 +24,27 @@ extension ModelContainer {
 @main
 struct SousChefApp: App {
     let dataContainer: ModelContainer = ModelContainer.appContainer()
+    
+    // Environment object for theme management
+    @StateObject private var themeManager = ThemeManager.shared
+    
+    init() {
+        // ThemeManager initialization is handled by the singleton
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(dataContainer).task {
-                await RecipeImageProvider.shared.configure(with: dataContainer.mainContext)
-            }
+                .modelContainer(dataContainer)
+                .environmentObject(themeManager)
+                .task {
+                    await RecipeImageProvider.shared.configure(with: dataContainer.mainContext)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .themeChanged)) { notification in
+                    if let theme = notification.object as? AppTheme {
+                        print("App theme changed to: \(theme.displayName)")
+                    }
+                }
         }
-        
     }
 }
